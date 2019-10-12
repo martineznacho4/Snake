@@ -1,4 +1,4 @@
 Falta:
 	Agregar restricciones a la aparicion de la serpiente
 	Arreglar primer comerseASiMisma()
-	Hacer más consiso el main()
+	

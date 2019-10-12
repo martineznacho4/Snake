@@ -40,25 +40,11 @@ def main():
 		if fila_serpiente == None and columna_serpiente == None:
 			return print("Movimiento invalido")
 
+		manzanas,tablero,serpiente,manzanaY,manzanaX = manzanaEnSerpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpiente,columna_serpiente)	
 
-		if manzanas in serpiente:
-			manzanas = manzana()
-			manzanaX,manzanaY = manzanas
-			tablero[manzanaY][manzanaX] = MANZANA
-			serpiente.append((fila_serpiente, columna_serpiente))
+		tablero = agregarSerpienteAlTablero(tablero,serpiente)
 
-		else:
-			tablero[manzanaY][manzanaX] = MANZANA
-			serpiente.append((fila_serpiente,columna_serpiente))
-			serpiente.pop(0)
-
-
-		for j in tablero:
-			for i in range(len(serpiente)):
-				x1,y1 = serpiente[i]
-				tablero[y1][x1] = CUERPO
-
-	#-----------------Limite del tablero---------------------
+		#-----------------Limite del tablero---------------------
 
 		limite = limites(tablero,serpiente, fila_serpiente, columna_serpiente)
 		if limite == "Pierde":
@@ -92,14 +78,36 @@ def imprimir_tablero(tablero):
 	for i in tablero:
 		print(i)
 
+def agregarSerpienteAlTablero(tablero, serpiente):
+	"""Agrega la posicion actual de la serpiente al tablero"""
+	for j in tablero:
+			for i in range(len(serpiente)):
+				x1,y1 = serpiente[i]
+				tablero[y1][x1] = CUERPO
+	return tablero			
+
 #----------Manzana---------------
 
 def manzana():
-	"""Devuelve una fila y columna aleatorias"""
+	"""Devuelve una fila y columna aleatorias que definen la posición de una manzana"""
 	fila_manzana = random.randrange(0,FILAS - 2 )
 	columna_manzana = random.randrange(0,COLUMNAS - 2 )
 
 	return (fila_manzana, columna_manzana)
+
+def manzanaEnSerpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpiente,columna_serpiente):
+	"""Recibe la posición de una manzana y si la serpiente pasa por esa posición se genera otra manzana aleatoriamente, sino la manzana se mantiene en su posición"""
+	if manzanas in serpiente:
+		manzanas = manzana()
+		manzanaX,manzanaY = manzanas
+		tablero[manzanaY][manzanaX] = MANZANA
+		serpiente.append((fila_serpiente, columna_serpiente))
+		return manzanas, tablero, serpiente,manzanaY,manzanaX
+	else:
+		tablero[manzanaY][manzanaX] = MANZANA
+		serpiente.append((fila_serpiente,columna_serpiente))
+		serpiente.pop(0)
+		return manzanas, tablero, serpiente,manzanaY,manzanaX
 
 #----------Serpiente-------------
 
@@ -107,7 +115,7 @@ def direcciones_serpiente(x, y, movimientoAnterior):
 	"""Recibe la posicion anterior de la serpiente y su ultimo movimiento, y dependiendo de lo que ingrese el usuario se aumenta o disminuye una fila/columna. Si el usuario no ingresa nada el movimiento continua en la direccion anterior"""
 
 	print("Ingrese una dirección: [w/a/s/d]:")
-	tecla = timed_input(0.5)
+	tecla = timed_input(0.6)
 
 	if tecla == "a" or tecla == "aa":
 		act_fila = x - 1
@@ -148,7 +156,6 @@ def direcciones_serpiente(x, y, movimientoAnterior):
 
 	else:
 		return None, None, tecla
-
 
 #------------Condiciones para perder----------------
 
