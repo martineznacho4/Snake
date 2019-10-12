@@ -5,7 +5,7 @@ FILAS = 10
 COLUMNAS =8
 CUERPO = "#"
 MANZANA = "O"
-MAXP = 10
+MAXP = 4
 
 def main():
 	clear_terminal()
@@ -70,7 +70,7 @@ def armar_tablero(f,c):
 	for fila in range(f):
 		nueva_fila = []
 		for columna in range(c):
-			nueva_fila.append(' ')
+			nueva_fila.append("'")
 		tablero.append(nueva_fila)
 	return tablero
 
@@ -115,7 +115,7 @@ def direcciones_serpiente(x, y, movimientoAnterior):
 	"""Recibe la posicion anterior de la serpiente y su ultimo movimiento, y dependiendo de lo que ingrese el usuario se aumenta o disminuye una fila/columna. Si el usuario no ingresa nada el movimiento continua en la direccion anterior"""
 
 	print("Ingrese una dirección: [w/a/s/d]:")
-	tecla = timed_input(0.6)
+	tecla = timed_input(0.4)
 
 	if tecla == "a" or tecla == "aa":
 		act_fila = x - 1
