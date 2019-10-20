@@ -1,11 +1,11 @@
 from terminal import *
 import random
 
-FILAS = 10
+FILAS =10
 COLUMNAS =8
 CUERPO = "#"
 MANZANA = "O"
-MAXP = 4
+MAXP = 10
 
 def main():
 	clear_terminal()
@@ -19,7 +19,7 @@ def main():
 
 	tablero[columna_serpiente][fila_serpiente] = CUERPO
 
-	movimientoAnterior = ()
+	movimiento_anterior = ()
 
 	manzanas = manzana()
 	manzanaX,manzanaY = manzanas
@@ -27,22 +27,22 @@ def main():
 
 	imprimir_tablero(tablero)
 
-	movimientoAnterior = ""
+	movimiento_anterior = ""
 
 	while len(serpiente) < MAXP:
 
 		tablero = armar_tablero(FILAS,COLUMNAS)
 		
-		fila_serpiente, columna_serpiente, movimientoAnterior = direcciones_serpiente(fila_serpiente,columna_serpiente,movimientoAnterior)
+		fila_serpiente, columna_serpiente, movimiento_anterior = direcciones_serpiente(fila_serpiente,columna_serpiente,movimiento_anterior)
 
-		comerse = comerseASiMisma(fila_serpiente,columna_serpiente,serpiente)
+		comerse = comerse_a_si_misma(fila_serpiente,columna_serpiente,serpiente,movimiento_anterior)
 
 		if fila_serpiente == None and columna_serpiente == None:
 			return print("Movimiento invalido")
 
-		manzanas,tablero,serpiente,manzanaY,manzanaX = manzanaEnSerpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpiente,columna_serpiente)	
+		manzanas,tablero,serpiente,manzanaY,manzanaX = manzana_en_serpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpiente,columna_serpiente)	
 
-		tablero = agregarSerpienteAlTablero(tablero,serpiente)
+		tablero = agregar_serpiente_al_tablero(tablero,serpiente)
 
 		#-----------------Limite del tablero---------------------
 
@@ -70,7 +70,7 @@ def armar_tablero(f,c):
 	for fila in range(f):
 		nueva_fila = []
 		for columna in range(c):
-			nueva_fila.append("'")
+			nueva_fila.append(' ')
 		tablero.append(nueva_fila)
 	return tablero
 
@@ -78,7 +78,7 @@ def imprimir_tablero(tablero):
 	for i in tablero:
 		print(i)
 
-def agregarSerpienteAlTablero(tablero, serpiente):
+def agregar_serpiente_al_tablero(tablero, serpiente):
 	"""Agrega la posicion actual de la serpiente al tablero"""
 	for j in tablero:
 			for i in range(len(serpiente)):
@@ -95,14 +95,14 @@ def manzana():
 
 	return (fila_manzana, columna_manzana)
 
-def manzanaEnSerpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpiente,columna_serpiente):
+def manzana_en_serpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpiente,columna_serpiente):
 	"""Recibe la posición de una manzana y si la serpiente pasa por esa posición se genera otra manzana aleatoriamente, sino la manzana se mantiene en su posición"""
 	if manzanas in serpiente:
 		manzanas = manzana()
 		manzanaX,manzanaY = manzanas
 		tablero[manzanaY][manzanaX] = MANZANA
 		serpiente.append((fila_serpiente, columna_serpiente))
-		return manzanas, tablero, serpiente,manzanaY,manzanaX
+		return manzanas, tablero, serpiente, manzanaY, manzanaX
 	else:
 		tablero[manzanaY][manzanaX] = MANZANA
 		serpiente.append((fila_serpiente,columna_serpiente))
@@ -111,64 +111,66 @@ def manzanaEnSerpiente(manzanas,manzanaX,manzanaY,tablero,serpiente,fila_serpien
 
 #----------Serpiente-------------
 
-def direcciones_serpiente(x, y, movimientoAnterior):
+def direcciones_serpiente(x, y, movimiento_anterior):
 	"""Recibe la posicion anterior de la serpiente y su ultimo movimiento, y dependiendo de lo que ingrese el usuario se aumenta o disminuye una fila/columna. Si el usuario no ingresa nada el movimiento continua en la direccion anterior"""
 
 	print("Ingrese una dirección: [w/a/s/d]:")
 	tecla = timed_input(0.4)
 
-	if tecla == "a" or tecla == "aa":
+	if tecla == "a":
 		act_fila = x - 1
-		return (act_fila, y, tecla)
+		
 
-	elif tecla == "d" or tecla == "dd":
+	elif tecla == "d":
 		act_fila = x + 1
-		return (act_fila, y, tecla)
+		
 
-	elif tecla == "w" or tecla == "ww":
+	elif tecla == "w":
 		act_columna = y - 1
-		return (x, act_columna, tecla)
+		
 
-	elif tecla == "s" or tecla == "ss":
+	elif tecla == "s":
 		act_columna = y + 1
-		return (x, act_columna, tecla)
+		
 
 	#----------------------------Si no se presiona ninguna tecla----------
 	
 	elif tecla == "":
-		if movimientoAnterior == "a":
+		if movimiento_anterior == "a":
 			act_fila = x - 1
-			return (act_fila, y, movimientoAnterior)
+		
 
-		elif movimientoAnterior == "d":
+		elif movimiento_anterior == "d":
 			act_fila = x + 1
-			return (act_fila, y, movimientoAnterior)
+		
 
-		elif movimientoAnterior == "w":
+		elif movimiento_anterior == "w":
 			act_columna = y - 1
-			return (x, act_columna, movimientoAnterior)
+		
 
-		elif movimientoAnterior == "s":
+		elif movimiento_anterior == "s":
 			act_columna = y + 1
-			return (x, act_columna, movimientoAnterior)
+		
 		else:
-			return (x,y,movimientoAnterior)
+			return (x,y,movimiento_anterior)
 
 	else:
 		return None, None, tecla
 
+	return (act_fila, act_columna, tecla)
+
 #------------Condiciones para perder----------------
 
-def limites(tablero, serpiente,fila_serpiente,columna_serpiente):
+def limites(tablero, serpiente, fila_serpiente, columna_serpiente):
 	"""Devuelve la cadena "Pierde" si la serpiente llega a uno de los bordes del tablero"""
 	for i in range(len(serpiente)):
 		for j in range(len(serpiente[i])):
 			if serpiente[i][j] < 0 or serpiente[i][j] > len(tablero):
 				return "Pierde"
 
-def comerseASiMisma(fila_serpiente,columna_serpiente,serpiente):
+def comerse_a_si_misma(fila_serpiente, columna_serpiente, serpiente,movimiento_anterior):
 	"""Devuelve la cadena "Pierde" si la siguiente posición de la serpiente ya se encuentra en el cuerpo de la serpiente"""
-	if (fila_serpiente,columna_serpiente) in serpiente:
+	if (fila_serpiente,columna_serpiente) in serpiente and movimiento_anterior is not "":
 		return "Pierde"
 
 
