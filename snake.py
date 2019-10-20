@@ -6,6 +6,7 @@ COLUMNAS =8
 CUERPO = "#"
 MANZANA = "O"
 MAXP = 10
+VELOCIDAD = 0.4
 
 def main():
 	clear_terminal()
@@ -35,7 +36,7 @@ def main():
 		
 		fila_serpiente, columna_serpiente, movimiento_anterior = direcciones_serpiente(fila_serpiente,columna_serpiente,movimiento_anterior)
 
-		comerse = comerse_a_si_misma(fila_serpiente,columna_serpiente,serpiente,movimiento_anterior)
+		comerse = comerse_a_si_misma(fila_serpiente,columna_serpiente,serpiente, movimiento_anterior)
 
 		if fila_serpiente == None and columna_serpiente == None:
 			return print("Movimiento invalido")
@@ -115,49 +116,36 @@ def direcciones_serpiente(x, y, movimiento_anterior):
 	"""Recibe la posicion anterior de la serpiente y su ultimo movimiento, y dependiendo de lo que ingrese el usuario se aumenta o disminuye una fila/columna. Si el usuario no ingresa nada el movimiento continua en la direccion anterior"""
 
 	print("Ingrese una dirección: [w/a/s/d]:")
-	tecla = timed_input(0.4)
+	tecla = timed_input(VELOCIDAD)
 
-	if tecla == "a":
-		act_fila = x - 1
-		
-
-	elif tecla == "d":
-		act_fila = x + 1
-		
-
-	elif tecla == "w":
-		act_columna = y - 1
-		
-
-	elif tecla == "s":
-		act_columna = y + 1
-		
-
-	#----------------------------Si no se presiona ninguna tecla----------
+	act_fila = x	
+	act_columna = y
 	
-	elif tecla == "":
-		if movimiento_anterior == "a":
-			act_fila = x - 1
-		
+	if tecla == "a" or tecla == "" and movimiento_anterior == "a":
+		tecla = "a"
+		act_fila -= 1
 
-		elif movimiento_anterior == "d":
-			act_fila = x + 1
-		
+	elif tecla == "d" or tecla == "" and movimiento_anterior == "d":
+		tecla = "d"
+		act_fila += 1
 
-		elif movimiento_anterior == "w":
-			act_columna = y - 1
-		
+	elif tecla == "w" or tecla == "" and movimiento_anterior == "w":
+		tecla = "w"
+		act_columna -= 1
 
-		elif movimiento_anterior == "s":
-			act_columna = y + 1
-		
-		else:
-			return (x,y,movimiento_anterior)
+	elif tecla == "s" or tecla == "" and movimiento_anterior == "s":
+		tecla = "s"
+		act_columna += 1
+
+	elif tecla == "" and movimiento_anterior == "":
+		return (act_fila, act_columna, tecla)	
 
 	else:
 		return None, None, tecla
 
-	return (act_fila, act_columna, tecla)
+		
+	return (act_fila, act_columna, tecla)	
+
 
 #------------Condiciones para perder----------------
 
@@ -168,7 +156,7 @@ def limites(tablero, serpiente, fila_serpiente, columna_serpiente):
 			if serpiente[i][j] < 0 or serpiente[i][j] > len(tablero):
 				return "Pierde"
 
-def comerse_a_si_misma(fila_serpiente, columna_serpiente, serpiente,movimiento_anterior):
+def comerse_a_si_misma(fila_serpiente, columna_serpiente, serpiente, movimiento_anterior):
 	"""Devuelve la cadena "Pierde" si la siguiente posición de la serpiente ya se encuentra en el cuerpo de la serpiente"""
 	if (fila_serpiente,columna_serpiente) in serpiente and movimiento_anterior is not "":
 		return "Pierde"
