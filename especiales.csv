@@ -1,0 +1,5 @@
+simbolo,aspecto,alteracion,tecla,descripcion
+"-","Largo","1","k","Achica el largo de la serpiente en 1"
+"+","Largo","1","l","Agranda a la serpiente en 1"
+"!","Velocidad","0.1","e","Disminuye la velocidad de la serpiente"
+"&","Velocidad","0.1","f","Aumenta la velocidad de la serpiente"
